@@ -61,7 +61,7 @@ export const createUserController = async (req, res, next) => {
 
 export const patchUserController = async (req, res, next) => {
   try {
-    const { userId } = req.params; // Отримуємо ID користувача з URL
+    const { userId } = req.params;
     const payload = req.body;
     console.log('Updating user with ID:', userId);
 
