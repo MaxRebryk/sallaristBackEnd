@@ -42,6 +42,8 @@ export const loginUser = async (payload) => {
 
   return await SessionsCollection.create({
     userId: user._id,
+    userRole: user.role,
+    userName: user.name,
     accessToken,
     refreshToken,
     accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
