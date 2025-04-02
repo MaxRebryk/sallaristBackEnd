@@ -29,6 +29,7 @@ export const loginUser = async (payload) => {
   if (!user) {
     throw createHttpError(404, 'User not found');
   }
+  console.log(user);
   const isEqual = await bcrypt.compare(payload.password, user.password);
 
   if (!isEqual) {
