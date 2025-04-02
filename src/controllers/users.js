@@ -8,11 +8,13 @@ import {
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
+import { ROLES } from '../constants/index.js';
 
 export const getAllUsersController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query);
   const filter = parseFilterParams(req.query);
+  const { role, _id } = req.user;
 
   const users = await getAllUsers({
     page,
@@ -20,6 +22,7 @@ export const getAllUsersController = async (req, res) => {
     sortBy,
     sortOrder,
     filter,
+    userId: role === ROLES.WORKER ? _id : null,
   });
 
   res.json({
@@ -30,16 +33,15 @@ export const getAllUsersController = async (req, res) => {
 };
 
 export const getUserByIdController = async (req, res, next) => {
-  const { parentId } = req.params;
-  const user = await getUserById(parentId);
+  const { userId } = req.params;
+  const user = await getUserById(userId);
 
   if (!user) {
     return next(createHttpError(404, 'User not found'));
   }
   res.status(200).json({
     status: 200,
-    message: `Successfully found user with id ${userId} !`,
-
+    message: `Successfully found user with id ${userId}!`,
     data: user,
   });
 };

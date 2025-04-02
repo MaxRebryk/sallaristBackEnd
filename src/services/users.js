@@ -13,7 +13,10 @@ export const getAllUsers = async ({
   const limit = perPage;
   const skip = page > 0 ? (page - 1) * perPage : 0;
 
-  const usersQuery = UsersCollection.find({ userId });
+  const usersQuery = UsersCollection.find();
+  if (userId) {
+    usersQuery.where('parentId').equals(userId);
+  }
 
   if (filter.type) {
     usersQuery.where('userType').equals(filter.gender);
@@ -35,8 +38,8 @@ export const getAllUsers = async ({
   };
 };
 
-export const getUserById = async (parentId) => {
-  const user = await UsersCollection.findById({ parantId: parentId });
+export const getUserById = async (userId) => {
+  const user = await UsersCollection.findById(userId);
   return user;
 };
 
