@@ -30,8 +30,8 @@ export const getAllUsersController = async (req, res) => {
 };
 
 export const getUserByIdController = async (req, res, next) => {
-  const { userId } = req.params;
-  const user = await getUserById(userId);
+  const { parentId } = req.params;
+  const user = await getUserById(parentId);
 
   if (!user) {
     return next(createHttpError(404, 'User not found'));

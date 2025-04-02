@@ -35,8 +35,8 @@ export const getAllUsers = async ({
   };
 };
 
-export const getUserById = async (userId) => {
-  const user = await UsersCollection.findById({ _id: userId });
+export const getUserById = async (parentId) => {
+  const user = await UsersCollection.findById({ parantId: parentId });
   return user;
 };
 
@@ -49,7 +49,7 @@ export const createUser = async (payload, req) => {
 
 export const updateUser = async (payload, options = {}, userId) => {
   const rawResult = await UsersCollection.findOneAndUpdate(
-    { _id: userId }, 
+    { _id: userId },
     payload,
     {
       new: true,
@@ -58,7 +58,7 @@ export const updateUser = async (payload, options = {}, userId) => {
   );
   console.log('Updating user with ID:', userId);
 
-  if (!rawResult) return null; 
+  if (!rawResult) return null;
 
   return {
     contact: rawResult,
