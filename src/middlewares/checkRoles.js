@@ -1,5 +1,4 @@
 import createHttpError from 'http-errors';
-
 import { ROLES } from '../constants/index.js';
 import { UsersCollection } from '../db/users.js';
 
@@ -11,28 +10,31 @@ export const checkRoles =
       return next(createHttpError(401));
     }
 
-    const { role } = user;
+    const { role, _id: currentUserId } = user;
+    const { userId } = req.params;
 
     if (roles.includes(ROLES.OWNER) && role === ROLES.OWNER) {
       return next();
     }
 
     if (roles.includes(ROLES.WORKER) && role === ROLES.WORKER) {
-      const { userId } = req.params;
+      if (userId && userId === currentUserId.toString()) {
+        return next();
+      }
+
+      if (req.path === '/users') {
+        req.query.parentId = currentUserId.toString();
+        return next();
+      }
 
       if (userId) {
         const worker = await UsersCollection.findOne({
           _id: userId,
-          parentId: user._id,
+          parentId: currentUserId,
         });
         if (worker) {
           return next();
         }
-      }
-
-      if (req.path === '/users') {
-        req.query.parentId = user._id.toString();
-        return next();
       }
 
       return next(createHttpError(403));
