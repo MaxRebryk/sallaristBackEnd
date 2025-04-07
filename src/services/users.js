@@ -38,11 +38,11 @@ export const getAllUsers = async ({
   };
 };
 
-export const getUserById = async (userId) => {
-  const user = await UsersCollection.findById(userId);
+export const getUserById = async (workerId) => {
+  const user = await UsersCollection.findOne({ parentId: workerId });
+
   return user;
 };
-
 export const createUser = async (payload, req) => {
   const user = await UsersCollection.create({
     ...payload,
