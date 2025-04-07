@@ -1,6 +1,6 @@
 import createHttpError from 'http-errors';
 import { ROLES } from '../constants/index.js';
-import { UsersCollection } from '../db/users.js';
+import { WorkersCollection } from '../db/models/workers.js';
 
 export const checkRoles =
   (...roles) =>
@@ -10,7 +10,7 @@ export const checkRoles =
       return next(createHttpError(401));
     }
 
-    const { role, _id: currentUserId } = user;
+    const { role, _id } = user;
     const { userId } = req.params;
 
     if (roles.includes(ROLES.OWNER) && role === ROLES.OWNER) {
@@ -18,26 +18,27 @@ export const checkRoles =
     }
 
     if (roles.includes(ROLES.WORKER) && role === ROLES.WORKER) {
-      if (userId && userId === currentUserId.toString()) {
-        return next();
-      }
-
-      if (req.path === '/users') {
-        req.query.parentId = currentUserId.toString();
+      if (userId && userId === _id.toString()) {
         return next();
       }
 
       if (userId) {
-        const worker = await UsersCollection.findOne({
+        const target = await WorkersCollection.findOne({
           _id: userId,
-          parentId: currentUserId,
+          parentId: _id,
         });
-        if (worker) {
+
+        if (target) {
           return next();
         }
       }
 
-      return next(createHttpError(403));
+      if (req.path === '/' && req.method === 'GET') {
+        req.query.parentId = _id.toString();
+        return next();
+      }
+
+      return next(createHttpError(403, 'Forbidden'));
     }
 
     return next(createHttpError(403));
