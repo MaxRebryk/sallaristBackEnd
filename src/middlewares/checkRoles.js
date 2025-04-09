@@ -1,6 +1,7 @@
 import createHttpError from 'http-errors';
 import { ROLES } from '../constants/index.js';
 import { WorkersCollection } from '../db/models/workers.js';
+import { UsersCollection } from '../db/users.js';
 
 export const checkRoles =
   (...roles) =>
@@ -23,7 +24,7 @@ export const checkRoles =
       }
 
       if (userId) {
-        const target = await WorkersCollection.findOne({
+        const target = await UsersCollection.findOne({
           _id: userId,
           parentId: _id,
         });
