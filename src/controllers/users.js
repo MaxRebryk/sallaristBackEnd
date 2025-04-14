@@ -28,7 +28,7 @@ export const getAllUsersController = async (req, res) => {
   res.json({
     status: 200,
     message: 'Successfully found users!',
-    data: users,
+    users: users,
   });
 };
 
