@@ -38,7 +38,7 @@ export const checkRoles =
         return next();
       }
 
-      return next(createHttpError(403, 'Forbidden'));
+      return next(createHttpError(403, 'Not enough permissions'));
     }
 
     return next(createHttpError(403));
