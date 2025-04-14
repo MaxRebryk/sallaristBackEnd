@@ -33,7 +33,7 @@ export const getAllUsers = async ({
   const paginationData = calculatePaginationData(usersCount, perPage, page);
 
   return {
-    data: users,
+    users,
     ...paginationData,
   };
 };
@@ -43,7 +43,7 @@ export const getUserById = async (workerId) => {
 
   return user;
 };
-export const createUser = async (payload, req) => {
+export const createUser = async (payload) => {
   const user = await UsersCollection.create({
     ...payload,
   });
